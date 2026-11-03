@@ -15,8 +15,11 @@
 - `tooling/environment-check.ts` は環境検証用 Worker。本体の MDM アプリではない。
 - `/health` は HTTP 応答と Web Crypto の RSA-SHA256 署名・検証を確認する。Google 認証や端末管理の動作を保証しない。
 - 型チェック、バンドル生成、ローカルの `/health` の 200 応答と未知のパスの 404 応答を確認済み。
-- `src/google/` にサービスアカウント JWT 認証・トークン更新と、読み取り専用の Enterprise 一覧クライアントがある。`npm test` は通信をモックし、鍵を実行時に生成する。公開 HTTP ルートは未追加。
-- Google の実認証・実 API 接続、Enterprise 登録、端末登録、ポリシー配布、管理 UI、永続化、本番デプロイは未検証・未対応。Google Cloud / Cloudflare の認証が利用できるかは作業時に再確認する。
+- `src/worker.ts` が入口。`/health` は検証用、`/admin` と `/api/` は Cloudflare Access JWT の署名・issuer・audience・管理者本人を検証する。ローカル用の認証バイパスは設けない。
+- `src/google/` に Google 認証、Enterprise 一覧・登録 URL・作成・固定の最小ポリシーのクライアントがある。端末登録トークン、端末操作・削除のメソッドはない。
+- 登録状態は D1 の `setup_state` に保存する。署名検証や登録状態のテストは合成データと一時的な鍵・SQLite で実行する。Enterprise 作成結果が不明な場合は `creating` / `needs_review` を自動解除せず、実結果を確認する。
+- `wrangler.jsonc` の D1 ID はローカル検証用のプレースホルダー。実環境の認証・DB・HTTPS オリジン・Access 設定は別途必要。実 API 接続、実機登録、本番デプロイは未検証。設定値の存在だけで成功としない。
+- Google の登録コールバックには一時トークンが query に含まれる。リクエスト URL をログに出さず、公開前に Cloudflare / プロキシ側のログも無効化・マスキングする。アプリのレスポンスは no-store / no-referrer とする。
 
 ## 開発時の参照先と注意点
 
