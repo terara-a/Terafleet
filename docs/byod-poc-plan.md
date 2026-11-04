@@ -45,6 +45,6 @@
 
 ## 現在の進捗
 
-段階 1 の内部モジュールとネットワークをモックしたテストを追加した。公開 HTTP ルートへの接続、Google の実認証、Enterprise 作成、実機操作、Cloudflare へのデプロイは未実施。認証・管理 API の準備ができるまで、検証用 Worker の用途は変えない。
+段階 1 の API クライアントに加え、段階 2 の管理画面、Cloudflare Access JWT 検証、D1 の登録状態、Enterprise 登録と固定の最小ポリシーを実装した。通信をモックしたテストとローカル環境で検証する。Google / Access の実認証、実際の Enterprise 作成・ポリシー変更、実機操作、Cloudflare へのデプロイは未実施。実機登録前の条件確認は引き続き必要。
 
 実装・検証の手順は [開発ガイド](development.md) を参照する。
